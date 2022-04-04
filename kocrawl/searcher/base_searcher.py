@@ -30,6 +30,9 @@ class BaseSearcher(BaseCrawler, metaclass=ABCMeta):
         if query:
             url += urllib.parse.quote(query)
 
+        if "search.naver?query=" in url:
+            url += "&dicType=1"
+
         out = bs4.BeautifulSoup(urlopen(Request(url, headers=self.headers)).read(), 'html.parser')
         return out
 
