@@ -52,8 +52,8 @@ class WeatherAnswerer(BaseAnswerer):
         """
 
         msg = self.weather_init.format(location=location)
-        msg += '{date} {location}지역은 오전에{j1} 섭씨 {t1}도이며, {w1} ' \
-               '오후에{j2} 섭씨 {t2}도이며, {w2}' \
+        msg += '{date} {location}지역은 오전에{j1} 섭씨 {t1}이며, {w1} ' \
+               '오후에{j2} 섭씨 {t2}이며, {w2}' \
             .format(date=date, location=location,
                     j1=josa[0], j2=josa[1],
                     t1=result['morning_temperature'],
