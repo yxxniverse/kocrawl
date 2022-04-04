@@ -26,10 +26,9 @@ class BaseSearcher(BaseCrawler, metaclass=ABCMeta):
         :param query: 검색할 쿼리
         :return: parsing된 html
         """
+
         if query:
             url += urllib.parse.quote(query)
-        if "search.naver?query=" in url:
-            url+= "&dicType=1"
 
         out = bs4.BeautifulSoup(urlopen(Request(url, headers=self.headers)).read(), 'html.parser')
         return out
@@ -52,7 +51,7 @@ class BaseSearcher(BaseCrawler, metaclass=ABCMeta):
             crawled = []
             for selector in selectors:
                 if selector == '.temperature_text':
-                    t0 = soup.select('.temperature_text')[0]
+                    t0=soup.select('.temperature_text')[0]
                     t1 = soup.select('.cell_temperature')[1].contents[1]
                     t2 = soup.select('.cell_temperature')[2].contents[1]
                     crawled.append(t0.contents[1].contents[1])
@@ -81,6 +80,37 @@ class BaseSearcher(BaseCrawler, metaclass=ABCMeta):
         except Exception:
             return None
 
+    def _bs4_content(self, url: str, query: str = ""):
+        """
+        beautiful soup 4를 이용하여 정적 웹페이지에 대한 크롤링을 시도합니다.
+        셀렉터를 적용하여 입력한 셀렉터에 해당하는 태그 안의 contents를 로드합니다.
+
+        :param url: 베이스 url
+        :param selectors: 검색할 셀렉터
+        :param query: 검색할 쿼리
+        :return: 크롤링된 콘텐츠
+        """
+        req = requests.get(url + query)
+        html = req.content.decode('utf-8', 'replace')
+        soup = BeautifulSoup(html, 'html.parser')
+
+        try:
+            crawled = []
+            t0 = soup.select('._3Apve')
+            t1 = soup.select('._3hCbH')
+
+            crawled.append(t0[0].contents[0])
+            crawled.append(t1[0].contents[0])
+            crawled.append(t0[1].contents[0])
+            crawled.append(t1[1].contents[0])
+            crawled.append(t0[2].contents[0])
+            crawled.append(t1[2].contents[0])
+
+            return crawled
+        except Exception:
+            return None
+
+
     def _bs4_documents(self, url: str, selectors: list, query: str = ""):
         """
         beautiful soup 4를 이용하여 정적 웹페이지에 대한 크롤링을 시도합니다.
@@ -93,7 +123,6 @@ class BaseSearcher(BaseCrawler, metaclass=ABCMeta):
         """
 
         out = self.__bs4(url, query)
-
         try:
             crawled = []
             for selector in selectors:
