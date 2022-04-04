@@ -13,7 +13,7 @@ class WeatherEditor(BaseEditor):
         """
 
         weather = self.weather[result['today_weather'].split(',')[0].strip()]
-        comparison = result['today_weather'].split(',')[1].strip()
+        comparison = result['today_weather'].split(',')[0].strip()
         temperature = result['today_temperature']
 
         result = {'weather': weather,
@@ -68,7 +68,7 @@ class WeatherEditor(BaseEditor):
         """
         특정 날짜 딕셔너리를 수정합니다.
 
-        :param result: 입력 딕셔너리
+        :param result: 입력 딕셔너리![](../../../../AppData/Local/Temp/85956893-e336c480-b9c3-11ea-9f70-0f2687b1122d.png)
         :return: 수정된 딕셔너리
         """
 

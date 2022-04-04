@@ -69,7 +69,9 @@ class WeatherCrawler(BaseCrawler):
         :return: 오늘 날씨
         """
 
+
         result_dict = WeatherSearcher().naver_search(location)
+       #        result_dict = WeatherSearcher().google_search(location, date)
         result = WeatherEditor().edit_today(result_dict)
         return WeatherAnswerer().comparison_with_yesterday_form(location, "오늘", result), result_dict
 

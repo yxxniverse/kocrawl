@@ -6,6 +6,7 @@ from urllib.request import urlopen, Request
 import bs4
 import requests
 
+from bs4 import BeautifulSoup
 from kocrawl.base import BaseCrawler
 from kocrawl.decorators import searcher
 
@@ -25,9 +26,10 @@ class BaseSearcher(BaseCrawler, metaclass=ABCMeta):
         :param query: 검색할 쿼리
         :return: parsing된 html
         """
-
         if query:
             url += urllib.parse.quote(query)
+        if "search.naver?query=" in url:
+            url+= "&dicType=1"
 
         out = bs4.BeautifulSoup(urlopen(Request(url, headers=self.headers)).read(), 'html.parser')
         return out
@@ -43,12 +45,38 @@ class BaseSearcher(BaseCrawler, metaclass=ABCMeta):
         :return: 크롤링된 콘텐츠
         """
 
+        html=requests.get('https://search.naver.com/search.naver?query='+query)
+        soup= BeautifulSoup(html.text,'html.parser')
         out = self.__bs4(url, query)
         try:
             crawled = []
             for selector in selectors:
-                for s in out.select(selector):
-                    crawled.append(s.contents)
+                if selector == '.temperature_text':
+                    t0 = soup.select('.temperature_text')[0]
+                    t1 = soup.select('.cell_temperature')[1].contents[1]
+                    t2 = soup.select('.cell_temperature')[2].contents[1]
+                    crawled.append(t0.contents[1].contents[1])
+                    crawled.append(t1.contents[1].contents[1])
+                    crawled.append(t1.contents[5].contents[1])
+                    crawled.append(t2.contents[1].contents[1])
+                    crawled.append(t2.contents[5].contents[1])
+
+                elif selector == '.inner > .list_box > .week_list':
+                    w0 = soup.select('.weather.before_slash')[0]
+                    w1 = soup.select('.cell_weather')[1]
+                    w2 = soup.select('.cell_weather')[2]
+                    #0오늘,1내일,2모레
+
+                    crawled.append(w0.contents[0])
+                    crawled.append(w1.contents[1].contents[3].contents[0].contents[0])
+                    crawled.append(w1.contents[3].contents[3].contents[0].contents[0])
+                    crawled.append(w2.contents[1].contents[3].contents[0].contents[0])
+                    crawled.append(w2.contents[3].contents[3].contents[0].contents[0])
+
+                else:
+                    for s in out.select(selector):
+                        crawled.append(s.contents)
+
             return crawled
         except Exception:
             return None
@@ -65,6 +93,7 @@ class BaseSearcher(BaseCrawler, metaclass=ABCMeta):
         """
 
         out = self.__bs4(url, query)
+
         try:
             crawled = []
             for selector in selectors:

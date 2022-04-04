@@ -5,10 +5,11 @@ import re
 class WeatherSearcher(BaseSearcher):
 
     def __init__(self):
+
         self.CSS = {
             # 검색에 사용할 CSS 셀렉터들을 정의합니다.
-            'naver_weather': '.info_data > .info_list > li > .cast_txt',
-            'naver_temperature': '.info_temperature > .todaytemp',
+            'naver_weather': '.inner > .list_box > .week_list',
+            'naver_temperature': '.temperature_text',
             'google_weather': '#wob_dcp > #wob_dc',
             'google_temperature': '#wob_tm'
         }
@@ -48,6 +49,7 @@ class WeatherSearcher(BaseSearcher):
         :return: 크롤링된 내용
         """
 
+
         query = self._make_query('오늘', location)  # 한번 서치에 전부 가져옴
         result = self._bs4_contents(self.url['naver'],
                                     selectors=[self.CSS['naver_weather'],
@@ -56,11 +58,10 @@ class WeatherSearcher(BaseSearcher):
 
         i = 0
         for k in self.data_dict.keys():
-            if 'specific' not in k:
-                # specific 빼고 전부 담음
-                self.data_dict[k] = re.sub(' ', '', result[i][0])
+             if 'specific' not in k:
+                 # specific 빼고 전부 담음
+                self.data_dict[k] = re.sub(' ', '', result[i])
                 i += 1
-
         return self.data_dict
 
     def google_search(self, location: str, date: str) -> dict:
