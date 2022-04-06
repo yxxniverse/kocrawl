@@ -4,7 +4,7 @@ import re
 
 class RentEditor(BaseEditor):
 
-    def edit_rent(self, location: str, place: str, item:str, result: dict) -> dict:
+    def edit_rent(self, location: str, place: str, result: dict) -> dict:
         """
         join_dict를 사용하여 딕셔너리에 있는 string 배열들을
         하나의 string으로 join합니다.
