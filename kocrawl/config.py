@@ -1,9 +1,11 @@
 CRAWLER = {
     'kinds': {
         'dust': ['미세먼지', '초미세먼지', '오존'],
-        'cycle': ['자전거','따릉이'],
-        'car':['전기차','전기자동차'],
         'rent':['대여할 곳']
+    },
+    'category':{
+        'cycle': ["자전거", "따릉이", "새싹따릉이", "새싹 따릉이"],
+        'car':["전기차", "전기자동차", "전기 자동차", "전기 차"],
     },
 
     'date': {
@@ -25,7 +27,8 @@ SEARCH = {
         'naver_map': 'https://map.naver.com/v5/api/search?caller=pcweb&query=',
         'daum_dict': 'https://100.daum.net/',
         'daum_news': 'https://news.daum.net/ranking/popular/',
-        'rent_map':'https://pcmap.place.naver.com/place/list?query='
+        'rent_map':'https://pcmap.place.naver.com/place/list?query=',
+        'naver_term':'https://terms.naver.com/'
     },
     'headers': {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
@@ -83,6 +86,6 @@ ANSWER = {
     'dust_init': '{location}의 다양한 대기오염 정보를 전해드릴게요. 😀\n',
     'weather_init': '{location}의 날씨 정보를 전해드릴게요. 😉\n',
     'map_init': '{location}의 {place}에 대한 정보를 전해드릴게요!. 😀😀\n',
-    'rent_init': '{location}의 {kinds} {item} 근처 정보를 전해드릴게요!. 😀😀\n',
+    'rent_init': '{location}의 {category} {item} 근처 정보를 전해드릴게요!. 😀😀\n',
     'fallback': "죄송해요.. 말씀하신 정보는 저도 잘 모르겠네요."
 }
